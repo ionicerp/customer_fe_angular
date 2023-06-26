@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: autolive-deployment
+  name: ionic-deployment-customer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: autolive
+      app: ionic-customer
   template:
     metadata:
       labels:
-        app: autolive
+        app: ionic-customer
     spec:
       containers:
-      - name: autolive
+      - name: ionic-customer
         image: ghcr.io/ionicerp/customer_fe_angular:latest
-        imagePullPolicy: Always
+        # imagePullPolicy: Always
         ports:
         - containerPort: 80
       imagePullSecrets:
@@ -25,12 +25,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: autolive-service
+  name: ionic-service-customer
 spec:
   selector:
-    app: autolive
+    app: ionic-customer
   ports:
   - protocol: TCP
     port: 80
     targetPort: 80
-  type: LoadBalancer
+  # type: LoadBalancer
