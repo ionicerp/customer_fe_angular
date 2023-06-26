@@ -31,22 +31,33 @@ jobs:
               docker build . --tag ghcr.io/ionicerp/customer_fe_angular:latest
               docker push ghcr.io/ionicerp/customer_fe_angular:latest
 
-  deploy:
-    needs: build-and-push-image
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Set up kubeconfig
+        run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
 
-    - name: Set up kubeconfig
-      run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+      - name: Deploy to Kubernetes
+        run: |
+          export KUBECONFIG=kubeconfig
+          kubectl rollout restart deployment/autolive-deployment
+  
 
-    # - name: Create Docker registry secret
-    #   run: |
-    #     export KUBECONFIG=kubeconfig
-    #     kubectl create secret docker-registry my-github-secret --docker-server=ghcr.io --docker-username=${{ secrets.MY_GITHUB_USERNAME }} --docker-password=${{ secrets.MY_GITHUB_TOKEN }} || true
 
-    - name: Deploy to Kubernetes
-      run: |
-        export KUBECONFIG=kubeconfig
-        kubectl apply -f Deployment.yaml  # replace with your deployment file path
+
+  # deploy:
+  #   needs: build-and-push-image
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
+
+  #   - name: Set up kubeconfig
+  #     run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+
+  #   # - name: Create Docker registry secret
+  #   #   run: |
+  #   #     export KUBECONFIG=kubeconfig
+  #   #     kubectl create secret docker-registry my-github-secret --docker-server=ghcr.io --docker-username=${{ secrets.MY_GITHUB_USERNAME }} --docker-password=${{ secrets.MY_GITHUB_TOKEN }} || true
+
+  #   - name: Deploy to Kubernetes
+  #     run: |
+  #       export KUBECONFIG=kubeconfig
+  #       kubectl apply -f Deployment.yaml  # replace with your deployment file path
