@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autolive-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autolive
+  template:
+    metadata:
+      labels:
+        app: autolive
+    spec:
+      containers:
+      - name: autolive
+        image: ghcr.io/ionicerp/customer_fe_angular:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: my-github-secret
+      # - name: my-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autolive-service
+spec:
+  selector:
+    app: autolive
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
