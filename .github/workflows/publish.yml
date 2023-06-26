@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           export KUBECONFIG=kubeconfig
-          kubectl rollout restart deployment/autolive-deployment
+          kubectl rollout restart deployment/ionic-deployment-customer
   
 
 
